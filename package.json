@@ -1,0 +1,53 @@
+{
+  "name": "schel-d-utils-browser",
+  "version": "1.0.0",
+  "description": "A library for code (designed to run in a browser) common to my various web projects.",
+  "main": "index.js",
+  "types": "index.d.js",
+  "type": "module",
+  "exports": {
+    ".": {
+      "import": "./index.js"
+    }
+  },
+  "scripts": {
+    "clean": "rimraf dist/*",
+    "prebuild": "npm run clean",
+    "build": "tsc --project src/tsconfig.json",
+    "lint": "eslint . & tsc --project src/tsconfig.json --noemit",
+    "prepare": "npm run build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/schel-d/schel-d-utils-browser.git"
+  },
+  "author": "schel-d",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/schel-d/schel-d-utils-browser/issues"
+  },
+  "homepage": "https://github.com/schel-d/schel-d-utils-browser#readme",
+  "keywords": [
+    "utils",
+    "dom",
+    "javascript"
+  ],
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^5.42.0",
+    "@typescript-eslint/parser": "^5.42.0",
+    "esbuild": "^0.15.13",
+    "eslint": "^8.27.0",
+    "eslint-config-prettier": "^8.5.0",
+    "prettier": "2.7.1",
+    "rimraf": "^3.0.2",
+    "typescript": "^4.8.4"
+  },
+  "files": [
+    "index.js",
+    "index.d.ts",
+    "dist/**/*"
+  ],
+  "dependencies": {
+    "schel-d-utils": "^2.0.0"
+  }
+}
