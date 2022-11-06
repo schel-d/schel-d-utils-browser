@@ -1,13 +1,13 @@
 {
   "name": "schel-d-utils-browser",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A library for code (designed to run in a browser) common to my various web projects.",
-  "main": "index.js",
-  "types": "index.d.js",
+  "main": "dist/_export.js",
+  "types": "dist/_export.d.ts",
   "type": "module",
   "exports": {
     ".": {
-      "import": "./index.js"
+      "import": "./dist/_export.js"
     }
   },
   "scripts": {
@@ -35,7 +35,6 @@
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^5.42.0",
     "@typescript-eslint/parser": "^5.42.0",
-    "esbuild": "^0.15.13",
     "eslint": "^8.27.0",
     "eslint-config-prettier": "^8.5.0",
     "prettier": "2.7.1",
@@ -43,8 +42,6 @@
     "typescript": "^4.8.4"
   },
   "files": [
-    "index.js",
-    "index.d.ts",
     "dist/**/*"
   ],
   "dependencies": {
