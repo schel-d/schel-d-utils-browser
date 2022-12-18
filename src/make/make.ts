@@ -4,9 +4,13 @@ export type DynamicCollection<T> = (T | undefined)[];
 /** An element and it's children, forming a tree. */
 export type ElementTree<T extends Element, K> = K & { $element: T; };
 
-/** A object containing named element trees for an element's children. */
-export type ElementCollection =
-  Record<string, ElementTree<Element, unknown> | undefined> | undefined;
+/**
+ * A object containing named element trees for an element's children, or named
+ * arrays of element trees.
+ */
+export type ElementCollection = Record<string,
+  ElementTree<Element, unknown> | ElementTree<Element, unknown>[]
+>;
 
 /**
  * Returns {@link ifTrue} if {@link condition} is true, and {@link ifFalse}
@@ -29,11 +33,47 @@ export function retrieve<T>(array: DynamicCollection<T> | undefined): T[] {
   return array.filter(x => x != null) as T[];
 }
 
+/**
+ * Runs {@link func} with the {@link value} if it's not undefined.
+ * @param value The value.
+ * @param func The function to run.
+ */
+export function apply<T>(value: T | undefined, func: (value: T) => void) {
+  if (value !== undefined) {
+    func(value);
+  }
+}
+
+/**
+ * Runs {@link func} with the non-undefined elements of the {@link array}, if
+ * there are any.
+ * @param array The array.
+ * @param func The function to run.
+ */
+export function applyArray<T>(array: DynamicCollection<T> | undefined,
+  func: (value: T[]) => void) {
+
+  const actuals = retrieve(array);
+  if (actuals.length > 0) {
+    func(actuals);
+  }
+}
+
+/**
+ * Creates an array of element from an {@link array} and {@link builder}
+ * function.
+ * @param array The array (may contain `undefined`s).
+ * @param builder The function to transform to values to elements.
+ */
+export function elementArray<T, K>(array: DynamicCollection<T>,
+  builder: (value: T) => K): K[] {
+  return retrieve(array).map(x => builder(x));
+}
+
 /** The possible configuration for a HtmlElement. */
 export type ElementAttributes = {
   id?: string;
   classes?: DynamicCollection<string>;
-  textContent?: string;
 }
 
 /**
@@ -48,40 +88,43 @@ export function element<
   Tag extends keyof HTMLElementTagNameMap, Children extends ElementCollection
 >(
   tag: Tag,
-  attributes?: ElementAttributes,
-  children?: Children
+  attributes: ElementAttributes,
+  children: Children
 ): ElementTree<HTMLElementTagNameMap[Tag], Children> {
 
   const element = document.createElement(tag);
 
   // Set the element ID if provided.
-  if (attributes?.id != null) {
-    element.id = attributes.id;
-  }
+  apply(attributes?.id, x => element.id = x);
 
   // Add each class provided.
-  const classes = retrieve(attributes?.classes);
-  if (classes.length > 1) {
-    element.classList.add(...classes);
-  }
-
-  // Set the text content if provided.
-  if (attributes?.textContent != null) {
-    element.textContent = attributes.textContent;
-  }
+  applyArray(attributes?.classes, x => element.classList.add(...x));
 
   // Add each child element provided.
   if (children != null) {
-    element.replaceChildren(
-      ...Object.keys(children)
-        .filter(k => children[k] != null)
-        .map(k => (children[k] as ElementTree<Element, unknown>).$element)
-    );
+    const childElements = Object.keys(children)
+      .filter(k => children[k] != null)
+      .map(k => {
+        const value = children[k];
+        if (isElementTree(value)) { return [value.$element]; }
+        else { return value.map(x => x.$element); }
+      })
+      .flat();
+
+    element.replaceChildren(...childElements);
   }
 
   // Return this element, as well as any children.
   return {
     $element: element,
     ...children
-  } as ElementTree<HTMLElementTagNameMap[Tag], Children>;
+  };
+}
+
+/**
+ * Returns true if {@link value} is an {@link ElementTree}.
+ * @param value The value to test.
+ */
+function isElementTree(value: unknown): value is ElementTree<Element, unknown> {
+  return value != null && typeof value === "object" && "$element" in value;
 }
