@@ -1,11 +1,11 @@
-import { apply } from "schel-d-utils";
+import { div } from "./make/div";
 
 /**
  * Creates a div that houses content that updates with an animation.
  */
 export class OdometerController<T> {
   /** The div to add to the layout which houses the odometer. */
-  readonly div: HTMLDivElement;
+  readonly $div: HTMLDivElement;
 
   /**
    * A function that returns true if two values are equivalent (meaning no UI
@@ -20,13 +20,10 @@ export class OdometerController<T> {
   private _currentValue: T;
 
   /** The element containing the UI for the {@link _currentValue}. */
-  private _in: HTMLElement;
+  private _$in: HTMLElement;
 
   /** The element containing the UI that is animating out (if any). */
-  private _out: HTMLElement | null;
-
-  /** The CSS class for the parent div. */
-  private readonly _parentDivClass: string;
+  private _$out: HTMLElement | null;
 
   /**
    * The CSS class that runs the "in" animation. Note that this class isn't
@@ -47,30 +44,30 @@ export class OdometerController<T> {
    * @param builder A function that creates the UI for a given value.
    * @param animateStart Whether or not to run the animation for the initial
    * value.
+   * @param parentDivClass The CSS class applied to the main div containing the
+   * odometer.
+   * @param childInClass The CSS class applied to the element ani
    */
   constructor(initialValue: T, equals: (a: T, b: T) => boolean,
     builder: (value: T) => HTMLElement, animateStart = false,
     parentDivClass = "odometer", childInClass = "odometer-in",
     childOutClass = "odometer-out") {
 
-    this._parentDivClass = parentDivClass;
     this._childInClass = childInClass;
     this._childOutClass = childOutClass;
 
-    this.div = apply(document.createElement("div"), div => {
-      div.className = parentDivClass;
-    });
+    this.$div = div({ classes: [parentDivClass] }, {}).$element;
 
-    this._in = builder(initialValue);
-    this._out = null;
+    this._$in = builder(initialValue);
+    this._$out = null;
 
     this._currentValue = initialValue;
     this._equals = equals;
     this._builder = builder;
 
-    this.div.append(this._in);
+    this.$div.append(this._$in);
     if (animateStart) {
-      this._in.classList.add(childInClass);
+      this._$in.classList.add(childInClass);
     }
   }
 
@@ -82,14 +79,14 @@ export class OdometerController<T> {
   update(value: T) {
     if (this._equals(this.currentValue, value)) { return; }
 
-    this._out?.remove();
-    this._out = this._in;
-    this._out.classList.remove(this._childInClass);
-    this._out.classList.add(this._childOutClass);
+    this._$out?.remove();
+    this._$out = this._$in;
+    this._$out.classList.remove(this._childInClass);
+    this._$out.classList.add(this._childOutClass);
 
-    this._in = this._builder(value);
-    this._in.classList.add(this._childInClass);
-    this.div.append(this._in);
+    this._$in = this._builder(value);
+    this._$in.classList.add(this._childInClass);
+    this.$div.append(this._$in);
 
     this._currentValue = value;
   }

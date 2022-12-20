@@ -1,4 +1,4 @@
-import { apply, element, ElementAttributes, ElementCollection } from "./make";
+import { ifDefined, element, ElementAttributes, ElementCollection } from "./make";
 
 /**
  * Identical to {@link ElementAttributes}, but with additional values for
@@ -17,7 +17,7 @@ export function p<K extends ElementCollection>(
   attributes: TextAttributes, children: K) {
 
   const dom = element("p", attributes, children);
-  apply(attributes?.text, x => dom.$element.textContent = x);
+  ifDefined(attributes.text, x => dom.$element.textContent = x);
   return dom;
 }
 
@@ -30,7 +30,7 @@ export function span<K extends ElementCollection>(
   attributes: TextAttributes, children: K) {
 
   const dom = element("span", attributes, children);
-  apply(attributes?.text, x => dom.$element.textContent = x);
+  ifDefined(attributes.text, x => dom.$element.textContent = x);
   return dom;
 }
 
@@ -43,7 +43,7 @@ export function h1<K extends ElementCollection>(
   attributes: TextAttributes, children: K) {
 
   const dom = element("h1", attributes, children);
-  apply(attributes?.text, x => dom.$element.textContent = x);
+  ifDefined(attributes.text, x => dom.$element.textContent = x);
   return dom;
 }
 
@@ -56,7 +56,7 @@ export function h2<K extends ElementCollection>(
   attributes: TextAttributes, children: K) {
 
   const dom = element("h2", attributes, children);
-  apply(attributes?.text, x => dom.$element.textContent = x);
+  ifDefined(attributes.text, x => dom.$element.textContent = x);
   return dom;
 }
 
@@ -69,7 +69,7 @@ export function h3<K extends ElementCollection>(
   attributes: TextAttributes, children: K) {
 
   const dom = element("h3", attributes, children);
-  apply(attributes?.text, x => dom.$element.textContent = x);
+  ifDefined(attributes.text, x => dom.$element.textContent = x);
   return dom;
 }
 
@@ -82,7 +82,7 @@ export function h4<K extends ElementCollection>(
   attributes: TextAttributes, children: K) {
 
   const dom = element("h4", attributes, children);
-  apply(attributes?.text, x => dom.$element.textContent = x);
+  ifDefined(attributes.text, x => dom.$element.textContent = x);
   return dom;
 }
 
@@ -95,7 +95,7 @@ export function h5<K extends ElementCollection>(
   attributes: TextAttributes, children: K) {
 
   const dom = element("h5", attributes, children);
-  apply(attributes?.text, x => dom.$element.textContent = x);
+  ifDefined(attributes.text, x => dom.$element.textContent = x);
   return dom;
 }
 
@@ -108,6 +108,6 @@ export function h6<K extends ElementCollection>(
   attributes: TextAttributes, children: K) {
 
   const dom = element("h6", attributes, children);
-  apply(attributes?.text, x => dom.$element.textContent = x);
+  ifDefined(attributes.text, x => dom.$element.textContent = x);
   return dom;
 }

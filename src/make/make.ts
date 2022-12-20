@@ -38,7 +38,7 @@ export function retrieve<T>(array: DynamicCollection<T> | undefined): T[] {
  * @param value The value.
  * @param func The function to run.
  */
-export function apply<T>(value: T | undefined, func: (value: T) => void) {
+export function ifDefined<T>(value: T | undefined, func: (value: T) => void) {
   if (value !== undefined) {
     func(value);
   }
@@ -50,7 +50,7 @@ export function apply<T>(value: T | undefined, func: (value: T) => void) {
  * @param array The array.
  * @param func The function to run.
  */
-export function applyArray<T>(array: DynamicCollection<T> | undefined,
+export function withDefined<T>(array: DynamicCollection<T> | undefined,
   func: (value: T[]) => void) {
 
   const actuals = retrieve(array);
@@ -95,23 +95,14 @@ export function element<
   const element = document.createElement(tag);
 
   // Set the element ID if provided.
-  apply(attributes?.id, x => element.id = x);
+  ifDefined(attributes.id, x => element.id = x);
 
   // Add each class provided.
-  applyArray(attributes?.classes, x => element.classList.add(...x));
+  withDefined(attributes.classes, x => element.classList.add(...x));
 
   // Add each child element provided.
   if (children != null) {
-    const childElements = Object.keys(children)
-      .filter(k => children[k] != null)
-      .map(k => {
-        const value = children[k];
-        if (isElementTree(value)) { return [value.$element]; }
-        else { return value.map(x => x.$element); }
-      })
-      .flat();
-
-    element.replaceChildren(...childElements);
+    element.replaceChildren(...getChildrenArray(children));
   }
 
   // Return this element, as well as any children.
@@ -127,4 +118,37 @@ export function element<
  */
 function isElementTree(value: unknown): value is ElementTree<Element, unknown> {
   return value != null && typeof value === "object" && "$element" in value;
+}
+
+/**
+ * Returns every child element in the top-level (or array in the top-level) of
+ * the given element collection.
+ * @param collection The element collection.
+ */
+export function getChildrenArray(collection: ElementCollection): Element[] {
+  return Object.keys(collection)
+    .filter(k => collection[k] != null)
+    .map(k => {
+      const value = collection[k];
+      if (isElementTree(value)) { return [value.$element]; }
+      else { return value.map(x => x.$element); }
+    })
+    .flat();
+}
+
+/**
+ * Returns every child element in the the given element collection, including
+ * nested children.
+ * @param collection The element collection.
+ */
+export function getChildrenArrayRecursive(collection: ElementCollection): Element[] {
+  return Object.keys(collection)
+    .filter(k => collection[k] != null)
+    .map(k => {
+      const value = collection[k];
+      const inner = getChildrenArrayRecursive(value as unknown as ElementCollection);
+      if (isElementTree(value)) { return [value.$element, ...inner]; }
+      else { return [...value.map(x => x.$element), ...inner]; }
+    })
+    .flat();
 }

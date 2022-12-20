@@ -45,6 +45,6 @@
     "dist/**/*"
   ],
   "dependencies": {
-    "schel-d-utils": "^2.0.0"
+    "schel-d-utils": "^2.3.0"
   }
 }
