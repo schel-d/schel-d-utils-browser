@@ -70,7 +70,7 @@ export function elementArray<T, K>(array: DynamicCollection<T>,
   return retrieve(array).map(x => builder(x));
 }
 
-/** The possible configuration for a HtmlElement. */
+/** The possible configuration for a HTMLElement. */
 export type ElementAttributes = {
   id?: string;
   classes?: DynamicCollection<string>;

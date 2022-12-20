@@ -69,3 +69,13 @@ export function aside<K extends ElementCollection>(
   attributes: ElementAttributes, children: K) {
   return element("aside", attributes, children);
 }
+
+/**
+ * Creates a `<dialog>`.
+ * @param attributes Attributes to apply to the element, e.g. classes.
+ * @param children Children to append to the element and return.
+ */
+export function dialog<K extends ElementCollection>(
+  attributes: ElementAttributes, children: K) {
+  return element("dialog", attributes, children);
+}
