@@ -88,3 +88,14 @@ export function canvas(id: string): HTMLCanvasElement {
     id, "HTMLCanvasElement", x => x instanceof HTMLCanvasElement
   );
 }
+
+/**
+ * Get a {@link HTMLDialogElement} from the document. Throws an error if the
+ * ID is invalid or the type is incorrect.
+ * @param id The ID of the element (without the "#" prefix).
+ */
+export function dialog(id: string): HTMLDialogElement {
+  return elementOfType<HTMLDialogElement>(
+    id, "HTMLDialogElement", x => x instanceof HTMLDialogElement
+  );
+}

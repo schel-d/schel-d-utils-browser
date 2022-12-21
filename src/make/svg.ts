@@ -1,4 +1,6 @@
-import { ifDefined, withDefined, DynamicCollection, ElementAttributes } from "./make";
+import {
+  ifDefined, withDefined, DynamicCollection, ElementAttributes, ElementTree
+} from "./make";
 
 /**
  * Identical to {@link ElementAttributes}, but with additional values for
@@ -18,7 +20,7 @@ export type SVGAttributes = {
  * Creates an `<svg>`.
  * @param attributes Attributes to apply to the element, e.g. classes.
  */
-export function svg(attributes: SVGAttributes) {
+export function svg(attributes: SVGAttributes): ElementTree<SVGSVGElement, unknown> {
   const element = document.createElementNS("http://www.w3.org/2000/svg", "svg");
   ifDefined(attributes.id, x => element.id = x);
   withDefined(attributes.classes, x => element.classList.add(...x));
@@ -32,7 +34,7 @@ export function svg(attributes: SVGAttributes) {
 
   ifDefined(attributes?.innerHTML, x => element.innerHTML = x);
 
-  return element;
+  return { $element: element };
 }
 
 /**
@@ -59,9 +61,10 @@ export function icon<K extends IconLibrary, S extends keyof K>(icon: S,
   const iconData = library[icon];
   const dom = svg({
     viewBox: iconData.viewBox,
+    preserveAspectRatio: "xMidYMid meet",
     innerHTML: iconData.data,
     ...attributes
   });
-  dom.classList.add("icon");
+  dom.$element.classList.add("icon");
   return dom;
 }
