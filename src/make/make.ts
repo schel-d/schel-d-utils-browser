@@ -127,6 +127,7 @@ function isElementTree(value: unknown): value is ElementTree<Element, unknown> {
  */
 export function getChildrenArray(collection: ElementCollection): Element[] {
   return Object.keys(collection)
+    .filter(k => k != "$element")
     .filter(k => collection[k] != null)
     .map(k => {
       const value = collection[k];
@@ -143,6 +144,7 @@ export function getChildrenArray(collection: ElementCollection): Element[] {
  */
 export function getChildrenArrayRecursive(collection: ElementCollection): Element[] {
   return Object.keys(collection)
+    .filter(k => k != "$element")
     .filter(k => collection[k] != null)
     .map(k => {
       const value = collection[k];
