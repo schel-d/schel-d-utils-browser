@@ -81,6 +81,7 @@ export function pickerGroup<K extends ElementCollection>(
  * `schel-d/css-template` compatible picker structure.
  */
 export type PickerButtonAttributes = {
+  labelClass?: string;
   contentClass?: string;
   radioID?: string;
 };
@@ -96,7 +97,7 @@ export function pickerButton<K extends ElementCollection>(
 
   const contentClass = attributes.contentClass ?? "picker-content";
 
-  return label({}, {
+  return label({ classes: [attributes.labelClass] }, {
     radio: radio({ id: attributes.radioID }),
     content: div({ classes: [contentClass] }, innerChildren)
   });
