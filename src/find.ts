@@ -18,7 +18,7 @@ export function any(id: string): HTMLElement {
  * @param typeChecker Function which checks the type of the element.
  */
 function elementOfType<T extends HTMLElement>(id: string, typeName: string,
-  typeChecker: (val: HTMLElement) => boolean): T {
+  typeChecker: (val: HTMLElement) => val is T): T {
 
   const result = any(id);
   if (typeChecker(result)) { return result as T; }
@@ -32,7 +32,7 @@ function elementOfType<T extends HTMLElement>(id: string, typeName: string,
  */
 export function div(id: string): HTMLDivElement {
   return elementOfType<HTMLDivElement>(
-    id, "HTMLDivElement", x => x instanceof HTMLDivElement
+    id, "HTMLDivElement", (x): x is HTMLDivElement => x instanceof HTMLDivElement
   );
 }
 
@@ -43,7 +43,7 @@ export function div(id: string): HTMLDivElement {
  */
 export function anchor(id: string): HTMLAnchorElement {
   return elementOfType<HTMLAnchorElement>(
-    id, "HTMLAnchorElement", x => x instanceof HTMLAnchorElement
+    id, "HTMLAnchorElement", (x): x is HTMLAnchorElement => x instanceof HTMLAnchorElement
   );
 }
 
@@ -54,7 +54,7 @@ export function anchor(id: string): HTMLAnchorElement {
  */
 export function input(id: string): HTMLInputElement {
   return elementOfType<HTMLInputElement>(
-    id, "HTMLInputElement", x => x instanceof HTMLInputElement
+    id, "HTMLInputElement", (x): x is HTMLInputElement => x instanceof HTMLInputElement
   );
 }
 
@@ -65,7 +65,7 @@ export function input(id: string): HTMLInputElement {
  */
 export function button(id: string): HTMLButtonElement {
   return elementOfType<HTMLButtonElement>(
-    id, "HTMLButtonElement", x => x instanceof HTMLButtonElement
+    id, "HTMLButtonElement", (x): x is HTMLButtonElement => x instanceof HTMLButtonElement
   );
 }
 
@@ -76,7 +76,7 @@ export function button(id: string): HTMLButtonElement {
  */
 export function select(id: string): HTMLSelectElement {
   return elementOfType<HTMLSelectElement>(
-    id, "HTMLSelectElement", x => x instanceof HTMLSelectElement
+    id, "HTMLSelectElement", (x): x is HTMLSelectElement => x instanceof HTMLSelectElement
   );
 }
 
@@ -87,7 +87,7 @@ export function select(id: string): HTMLSelectElement {
  */
 export function canvas(id: string): HTMLCanvasElement {
   return elementOfType<HTMLCanvasElement>(
-    id, "HTMLCanvasElement", x => x instanceof HTMLCanvasElement
+    id, "HTMLCanvasElement", (x): x is HTMLCanvasElement => x instanceof HTMLCanvasElement
   );
 }
 
@@ -102,7 +102,8 @@ export function dialog(id: string): HTMLDialogElement {
 
     // If window.HTMLDialogElement is false, then the dialog element is not
     // supported (but the polyfill will add support any, so allow it).
-    x => !window.HTMLDialogElement || x instanceof HTMLDialogElement
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (x): x is HTMLDialogElement => !window.HTMLDialogElement || (x as any).showModal
   );
 
   dialogPolyfill.registerDialog(dialog);
