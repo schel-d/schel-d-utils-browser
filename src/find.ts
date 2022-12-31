@@ -98,7 +98,11 @@ export function canvas(id: string): HTMLCanvasElement {
  */
 export function dialog(id: string): HTMLDialogElement {
   const dialog = elementOfType<HTMLDialogElement>(
-    id, "HTMLDialogElement", x => x instanceof HTMLDialogElement
+    id, "HTMLDialogElement",
+
+    // If window.HTMLDialogElement is false, then the dialog element is not
+    // supported (but the polyfill will add support any, so allow it).
+    x => !window.HTMLDialogElement || x instanceof HTMLDialogElement
   );
 
   dialogPolyfill.registerDialog(dialog);
