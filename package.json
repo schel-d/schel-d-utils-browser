@@ -46,6 +46,6 @@
   ],
   "dependencies": {
     "dialog-polyfill": "^0.5.6",
-    "schel-d-utils": "^2.3.0"
+    "schel-d-utils": "^2.4.1"
   }
 }
