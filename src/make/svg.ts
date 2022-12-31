@@ -41,7 +41,7 @@ export function svg(attributes: SVGAttributes): ElementTree<SVGSVGElement, unkno
  * Contains the instructions for creating each icon in the set used by this
  * application.
  */
-export type IconLibrary = { [index: string]: { viewBox: string, data: string } };
+export type IconLibrary = Record<string, { viewBox: string; data: string }>;
 
 /**
  * Identical to {@link ElementAttributes}, but with additional values for

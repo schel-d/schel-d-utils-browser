@@ -1,3 +1,5 @@
+import dialogPolyfill from "dialog-polyfill";
+
 /**
  * Get any element from the document. Throws an error if the ID is invalid.
  * @param id The ID of the element (without the "#" prefix).
@@ -95,7 +97,10 @@ export function canvas(id: string): HTMLCanvasElement {
  * @param id The ID of the element (without the "#" prefix).
  */
 export function dialog(id: string): HTMLDialogElement {
-  return elementOfType<HTMLDialogElement>(
+  const dialog = elementOfType<HTMLDialogElement>(
     id, "HTMLDialogElement", x => x instanceof HTMLDialogElement
   );
+
+  dialogPolyfill.registerDialog(dialog);
+  return dialog;
 }
